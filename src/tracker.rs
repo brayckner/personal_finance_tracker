@@ -27,20 +27,12 @@ impl Tracker {
         }
     }
 
-    pub fn view_transactions(&self) {
-        if self.transactions.len() == 0 {
-            println!("\nNo Transactiions exist at this time.\n")
-        } else {
-            println!("\n--------------------------------------------");
-            for transaction in &self.transactions {
-                transaction.display();
-            }
-            println!("--------------------------------------------\n");
-        }
-    }
-
     // TODO: This needs to be replaced with just getting a random number uuid. 
     pub fn set_initial_id(&self) -> u32 {
         self.transactions.len().try_into().unwrap()
+    }
+
+    pub fn get_transactions(&self) -> &Vec<Transaction> {
+        &self.transactions
     }
 }
