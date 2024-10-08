@@ -1,46 +1,86 @@
+use std::sync::Mutex;
+use actix_web::{App, HttpResponse, HttpServer, Responder};
+use serde::{Deserialize, Serialize};
+
 use tracker::Tracker;
 use transaction::Transaction;
-use ui::{display_menu, get_ammount, get_category, get_date, get_user_selection, user_set_id};
 
 mod tracker;
 mod transaction;
 mod ui;
 mod utils;
 
-fn main() {
-    let mut tracker = Tracker::new();
+struct AppState {
+    tracker: Mutex<Tracker>,
+}
 
-    loop {
-        display_menu();
-        let user_selection = get_user_selection();
+#[derive(Deserialize)]
+struct TransactionInput {
+    amount: f64,
+    category: String,
+    date: String,
+}
 
-        if Some(user_selection).is_some() {
-            if user_selection == 1 {
-                let id = tracker.set_initial_id();
-                let amount = get_ammount();
-                let category = get_category();
-                let date = get_date();
-                let transaction = Transaction::new(id, amount, category, date);
-                tracker.add_transaction(&transaction);
-            }
+#[derive(Serialize)]
+struct TransactionResponse {
+    id: u32,
+    amount: f64,
+    category: String,
+    date: String,
+}
 
-            if user_selection == 2 {
-                tracker.view_transactions();
-            }
+async fn add_transaction(data: actix_web::web::Data<AppState>, transaction: actix_web::web::Json<TransactionInput>) -> impl Responder {
+    let mut tracker = data.tracker.lock().unwrap();
+    let id = tracker.set_initial_id();
+    let new_transaction = Transaction::new(id, transaction.amount, transaction.category.clone(), transaction.date.clone());
+    tracker.add_transaction(&new_transaction);
 
-            if user_selection == 3 {
-                let transaction_id = user_set_id();
-                tracker.delete_transaction(transaction_id);
-            }
+    HttpResponse::Ok().json(TransactionResponse {
+        id, 
+        amount: transaction.amount, 
+        category: transaction.category.clone(), 
+        date: transaction.date.clone(),
+    })
+}
 
-            if user_selection == 4 {
-                println!("Doing operation: {}", user_selection);
-            }
+async fn view_transaction(data: actix_web::web::Data<AppState>) -> impl Responder {
+    let tracker = data.tracker.lock().unwrap();
+    let transactions: Vec<TransactionResponse> = tracker.get_transactions()
+        .iter()
+        .map(|t| TransactionResponse {
+            id: t.id,
+            amount: t.amount,
+            category: t.category.clone(),
+            date: t.date.clone(), 
+        })
+        .collect();
 
-            if user_selection == 5 {
-                println!("Exiting Program. Bye.");
-                break;
-            }
-        }
-    }
+    HttpResponse::Ok().json(transactions)
+}
+
+async fn delete_transaction(data: actix_web::web::Data<AppState>, id: actix_web::web::Path<u32>) -> impl Responder {
+    let mut tracker = data.tracker.lock().unwrap();
+    tracker.delete_transaction(*id);
+    HttpResponse::Ok().body("Transaction Deleted")
+}
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+
+    // Setting up App State to share Tracker across Threads
+    let app_state = actix_web::web::Data::new(AppState {
+        tracker: Mutex::new(Tracker::new()),
+    });
+
+    HttpServer::new(move || {
+        App::new()
+            .app_data(app_state.clone())
+            .route("/transactions", actix_web::web::post().to(add_transaction))
+            .route("/transactions", actix_web::web::get().to(view_transaction))
+            .route("/transactions/{id}", actix_web::web::delete().to(delete_transaction))
+    })
+    .workers(10)
+    .bind(("127.0.0.1", 8080))?
+    .run()
+    .await
 }
