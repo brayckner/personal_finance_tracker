@@ -1,7 +1,7 @@
 // Manages a list of transactions, including adding, deleting, and retrieving transactions.
 // Implements methods for calculating the balance and generating reports.
 
-use crate::transaction::Transaction;
+use super::transaction::Transaction;
 
 pub struct Tracker {
     transactions: Vec<Transaction>
