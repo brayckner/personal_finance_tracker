@@ -1,17 +1,22 @@
 use std::sync::Mutex;
 use actix_web::{App, HttpResponse, HttpServer, Responder};
+use db::connection::establish_connection;
 use serde::{Deserialize, Serialize};
 
+use sqlx::PgPool;
 use tracker::Tracker;
 use transaction::Transaction;
 
 mod tracker;
 mod transaction;
-mod ui;
 mod utils;
+
+mod db;
+mod models;
 
 struct AppState {
     tracker: Mutex<Tracker>,
+    db_pool: PgPool,
 }
 
 #[derive(Deserialize)]
@@ -67,9 +72,14 @@ async fn delete_transaction(data: actix_web::web::Data<AppState>, id: actix_web:
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
 
+    // Establishing connection to db
+    let db_pool = establish_connection().await;
+    println!("DB Pool {:?}", db_pool);
+
     // Setting up App State to share Tracker across Threads
     let app_state = actix_web::web::Data::new(AppState {
         tracker: Mutex::new(Tracker::new()),
+        db_pool,
     });
 
     HttpServer::new(move || {
