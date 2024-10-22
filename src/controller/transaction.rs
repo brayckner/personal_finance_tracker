@@ -1,4 +1,5 @@
 use actix_web::{ HttpResponse, Responder};
+use uuid::Uuid;
 use crate::models::transaction::TransactionInput;
 use crate::services::transaction::{create_transaction, fetch_transactions, remove_transaction};
 use crate::state::AppState;
@@ -17,7 +18,7 @@ pub async fn view_transaction(data: actix_web::web::Data<AppState>) -> impl Resp
     }
 }
 
-pub async fn delete_transaction(data: actix_web::web::Data<AppState>, id: actix_web::web::Path<u32>) -> impl Responder {
+pub async fn delete_transaction(data: actix_web::web::Data<AppState>, id: actix_web::web::Path<Uuid>) -> impl Responder {
     return match remove_transaction(&data, *id).await {
         Ok(_) => HttpResponse::Ok().body("Transaction Deleted"),
         Err(e) => HttpResponse::InternalServerError().body(e.to_string()),

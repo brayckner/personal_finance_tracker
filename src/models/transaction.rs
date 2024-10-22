@@ -2,6 +2,7 @@
 // Methods for creating, displaying, and serializing transactions.
 
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 #[derive(Deserialize)]
 pub struct TransactionInput {
     pub amount: f64,
@@ -11,14 +12,14 @@ pub struct TransactionInput {
 
 #[derive(Serialize)]
 pub struct TransactionResponse {
-    pub id: u32,
+    pub id: Uuid,
     pub amount: f64,
     pub category: String,
     pub date: String,
 }
 #[derive(Clone, Serialize)]
 pub struct Transaction {
-    pub id: u32,
+    pub id: Uuid,
     pub amount: f64,
     pub category: String,
     pub date: String,
@@ -26,8 +27,8 @@ pub struct Transaction {
 
 impl Transaction {
 
-    pub fn new(id: u32, amount: f64, category: String, date: String) -> Self {
-        Self {id, amount, category, date}
+    pub fn new(amount: f64, category: String, date: String) -> Self {
+        Self {id: Uuid::new_v4(), amount, category, date}
     }
 }
 

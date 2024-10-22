@@ -1,13 +1,14 @@
+use uuid::Uuid;
+
 use crate::{models::transaction::{Transaction, TransactionInput, TransactionResponse}, state::AppState};
 
 pub async fn create_transaction(data: &AppState, transaction: TransactionInput) -> Result<TransactionResponse, String> {
     let mut tracker = data.tracker.lock().unwrap();
-    let id = tracker.set_initial_id();
-    let new_transaction = Transaction::new(id, transaction.amount, transaction.category.clone(), transaction.date.clone());
+    let new_transaction = Transaction::new(transaction.amount, transaction.category.clone(), transaction.date.clone());
     tracker.add_transaction(&new_transaction);
 
     return Ok(TransactionResponse {
-        id, 
+        id: new_transaction.id, 
         amount: transaction.amount, 
         category: transaction.category.clone(), 
         date: transaction.date.clone(),
@@ -29,7 +30,7 @@ pub async fn fetch_transactions(data: &AppState) -> Result<Vec<TransactionRespon
     return Ok(transactions)
 }
 
-pub async fn remove_transaction(data: &AppState, id: u32) -> Result<(), String> {
+pub async fn remove_transaction(data: &AppState, id: Uuid) -> Result<(), String> {
     let mut tracker = data.tracker.lock().unwrap();
     tracker.delete_transaction(id);
     return Ok(())
