@@ -1,43 +1,43 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/frontend/node_modules
-/frontend/.pnp
-/frontend.pnp.*
-/frontend.yarn/*
-!frontend/.yarn/patches
-!frontend/.yarn/plugins
-!frontend/.yarn/releases
-!frontend/.yarn/versions
+/frontend/finance-tracker/node_modules
+/frontend/finance-tracker/.pnp
+/frontend/finance-tracker.pnp.*
+/frontend/finance-tracker/.yarn/*
+!frontend/finance-tracker/.yarn/patches
+!frontend/finance-tracker/.yarn/plugins
+!frontend/finance-tracker/.yarn/releases
+!frontend/finance-tracker/.yarn/versions
 
 # testing
-/frontend/coverage
+/frontend/finance-tracker/coverage
 
 # next.js
-/frontend/.next/
-/frontend/out/
+/frontend/finance-tracker/.next/
+/frontend/finance-tracker/out/
 
 # production
-/frontend/build
+/frontend/finance-tracker/build
 
 # misc
-/frontend/.DS_Store
-/frontend/*.pem
+/frontend/finance-tracker/.DS_Store
+/frontend/finance-tracker/*.pem
 
 # debug
-/frontend/npm-debug.log*
-/frontend/yarn-debug.log*
-/frontend/yarn-error.log*
+/frontend/finance-tracker/npm-debug.log*
+/frontend/finance-tracker/yarn-debug.log*
+/frontend/finance-tracker/yarn-error.log*
 
 # env files (can opt-in for commiting if needed)
-/frontend/.env*
+/frontend/finance-tracker/.env*
 
 # vercel
-/frontend/.vercel
+/frontend/finance-tracker/.vercel
 
 # typescript
-/frontend/*.tsbuildinfo
-/frontend/next-env.d.ts
+/frontend/finance-tracker/*.tsbuildinfo
+/frontend/finance-tracker/next-env.d.ts
 
 /backend/target
 .env
