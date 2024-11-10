@@ -1,4 +1,4 @@
-use std::fmt::Debug;
+use std::env;
 use actix_web::{HttpResponse, Responder};
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
@@ -39,7 +39,7 @@ pub async fn fetch_financial_data() -> impl Responder {
 
     // API URL and Token
     let url = "https://api.tiingo.com/api/test/";
-    let auth_token = dotenv::var("TIINGO_API_KEY").expect("TIINGO_API_KEY not set in .env");
+    let auth_token = env::var("TIINGO_API_KEY").expect("TIINGO_API_KEY not set in .env");
 
     // prepare the request with headers
     let response = client.get(url)

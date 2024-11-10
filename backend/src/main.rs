@@ -34,7 +34,7 @@ async fn main() -> std::io::Result<()> {
             .route("/fetch-market-data", actix_web::web::get().to(fetch_financial_data))
     })
     .workers(10)
-    .bind(("127.0.0.1", 8080))?
+    .bind(("0.0.0.0", 8080))?
     .run()
     .await
 }

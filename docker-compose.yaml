@@ -7,11 +7,14 @@ services:
       context: ./backend
       dockerfile: rust.dockerfile
       args:
-        DATABASE_URL: postgres://postgres:postgres@db:5432/finance_tracker
+        DATABASE_URL: ${DATABASE_URL}
+        TIINGO_API_KEY: ${TIINGO_API_KEY}
     ports:
-      - 8080:8080
+      - "8080:8080"
     environment:
       DATABASE_URL: postgres://postgres:postgres@db:5432/finance_tracker
+    env_file:
+      - .env
     depends_on:
       - db
   db: 
