@@ -1,0 +1,30 @@
+# Define Services 
+services:
+  rustapp:
+    container_name: finance_tracker_backend
+    image: brayckner/finance_tracker_backend
+    build:
+      context: ./backend
+      dockerfile: rust.dockerfile
+      args:
+        DATABASE_URL: postgres://postgres:postgres@db:5432/finance_tracker
+    ports:
+      - 8080:8080
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/finance_tracker
+    depends_on:
+      - db
+  db: 
+    image: postgres
+    container_name: finance_tracker_db
+    environment:
+      POSTGRES_DB: finance_tracker
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata: {}

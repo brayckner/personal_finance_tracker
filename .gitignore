@@ -42,3 +42,6 @@
 /backend/target
 .env
 .idea
+
+# Ignore Docker-related persistent data
+pgdata/
