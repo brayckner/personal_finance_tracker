@@ -4,6 +4,7 @@ use controller::transaction::{add_transaction, delete_transaction, view_transact
 use db::connection::establish_connection;
 use models::tracker::Tracker;
 use state::AppState;
+use crate::controller::transaction::fetch_financial_data;
 
 mod db;
 mod models;
@@ -30,6 +31,7 @@ async fn main() -> std::io::Result<()> {
             .route("/transactions", actix_web::web::post().to(add_transaction))
             .route("/transactions", actix_web::web::get().to(view_transaction))
             .route("/transactions/{id}", actix_web::web::delete().to(delete_transaction))
+            .route("/fetch-market-data", actix_web::web::get().to(fetch_financial_data))
     })
     .workers(10)
     .bind(("127.0.0.1", 8080))?
