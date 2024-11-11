@@ -15,6 +15,12 @@ RUN cargo build --release
 
 FROM debian:bookworm-slim
 
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    openssl \
+    ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
 RUN apt-get update && apt install -y openssl
 
 WORKDIR /usr/local/bin
