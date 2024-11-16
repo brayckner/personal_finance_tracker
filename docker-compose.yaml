@@ -1,5 +1,18 @@
 # Define Services 
 services:
+  next-app:
+    container_name: ft_frontend
+    image: brayckner/finance_tracker_frontend
+    build:
+      context: ./frontend/finance-tracker
+      dockerfile: next.dockerfile
+      # args:
+      #   ENV_VARIABLE: ${ENV_VARIABLE}
+      #   NEXT_PUBLIC_ENV_VARIABLE: ${NEXT_PUBLIC_ENV_VARIABLE}
+    restart: always
+    ports:
+      - 3000:3000
+
   rustapp:
     container_name: finance_tracker_backend
     image: brayckner/finance_tracker_backend
@@ -9,6 +22,7 @@ services:
       args:
         DATABASE_URL: ${DATABASE_URL}
         TIINGO_API_KEY: ${TIINGO_API_KEY}
+    restart: always
     ports:
       - "8080:8080"
     environment:
@@ -17,6 +31,7 @@ services:
       - .env
     depends_on:
       - db
+
   db: 
     image: postgres
     container_name: finance_tracker_db
@@ -24,6 +39,7 @@ services:
       POSTGRES_DB: finance_tracker
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+    restart: always
     ports:
       - 5432:5432
     volumes:
