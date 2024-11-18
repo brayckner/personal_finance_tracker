@@ -9,6 +9,11 @@ services:
       # args:
       #   ENV_VARIABLE: ${ENV_VARIABLE}
       #   NEXT_PUBLIC_ENV_VARIABLE: ${NEXT_PUBLIC_ENV_VARIABLE}
+    volumes:
+      - ./frontend/finance-tracker:/app
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
     restart: always
     ports:
       - 3000:3000
