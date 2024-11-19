@@ -17,6 +17,8 @@ services:
     restart: always
     ports:
       - 3000:3000
+    depends_on:
+      - rustapp
 
   rustapp:
     container_name: finance_tracker_backend
