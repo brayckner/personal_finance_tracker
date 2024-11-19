@@ -1,4 +1,4 @@
-name: ci
+name: docker-ci
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
           push: true
           context: ./backend
           file: ./backend/rust.dockerfile
-          tags: user/finance_tracker_backend:latest
+          tags: brayckner/finance_tracker_backend:latest
 
       - name: Build and push frontend
         uses: docker/build-push-action@v6
@@ -36,4 +36,4 @@ jobs:
           push: true
           context: ./frontend/finance-tracker
           file: ./frontend/finance-tracker/next.dockerfile
-          tags: user/finance_tracker_frontend:latest
+          tags: brayckner/finance_tracker_frontend:latest
