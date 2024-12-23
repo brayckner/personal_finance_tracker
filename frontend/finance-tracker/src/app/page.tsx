@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import Link from 'next/link';
 
 export default function Home() {
 
@@ -35,7 +36,7 @@ export default function Home() {
           </CardContent>
           <CardFooter>
             <div className='flex flex-row justify-end w-full'>
-              <Button onClick={handleGetStartedTest}>Get Started</Button>
+              <Button><Link href={"/dashboard"}>See Dashboard</Link></Button>
             </div>
           </CardFooter>
         </Card>
